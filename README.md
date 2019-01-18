@@ -26,11 +26,14 @@ You can add or remove data any time by adding XML, JSON or RSS files in the `dat
 Runs on [http://localhost:8000](http://localhost:8000)
 
 ### The gateway!
-An instance of KrakenD with several endpoints. Its configuration is in the folder `krakend/`.
+Two instances of KrakenD with several endpoints. The configuration is in the folder `krakend/`.
 
 You can drag the file `krakend/krakend.json` anytime to the [KrakenD designer](https://www.krakend.io/designer/) and resume the edition from there.
 
-Runs on [http://localhost:8080](http://localhost:8080)
+Each instance can be accessed at [http://localhost:8081](http://localhost:8081) and [http://localhost:8082](http://localhost:8082)
+
+### HAProxy
+The load balancer in front of the cluster of gateways. Runs on [http://localhost:8080](http://localhost:8080) and exposes the metrics endpoint at [http://localhost:1936/](http://localhost:1936/) (someuser:password)
 
 ### Metrics
 A Jaeger dashboard shows the traces of the activity you generate. Runs on [http://localhost:16686](http://localhost:16686)
@@ -73,6 +76,7 @@ The following endpoints are worth noticing:
 - `/token`: Signs a token
 - `/public`: Simple aggregation of two public API calls from Bitbucket and Github with some field selection.
 - `/splash`: Public endpoint aggregating data from the internal backend
+- `/health`: Public dummy endpoint used by the load balancer for checking the gateway instances
 
 ## Contribute!
 This repository is the place for everyone to start using KrakenD. Maybe we are too used to KrakenD, and we don't realize what would be good to include here for a starter.
