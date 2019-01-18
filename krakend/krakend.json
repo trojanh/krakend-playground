@@ -57,6 +57,15 @@
       }
     },
     {
+      "endpoint": "/health",
+      "backend": [
+        {
+          "url_pattern": "/user/1.json",
+          "group": "user"
+        }
+      ]
+    },
+    {
       "endpoint": "/fail",
       "backend": [
         {
