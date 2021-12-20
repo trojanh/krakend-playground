@@ -148,7 +148,7 @@
           "audience": ["http://api.example.com"],
           "roles_key": "http://api.example.com/custom/roles",
           "roles": ["user", "admin"],
-          "jwk-url": "https://albert-test.auth0.com/.well-known/jwks.json"
+          "jwk-url": "https://dev-0pixcds1.us.auth0.com/.well-known/jwks.json"
         }
       }
     },

@@ -31,7 +31,8 @@ window.addEventListener('load', function() {
   var pingViewBtn = document.getElementById('btn-ping-view');
 
   var pingPublic = document.getElementById('btn-ping-public');
-  var pingPrivate = document.getElementById('btn-ping-private');
+  var pingPrivateAuth0 = document.getElementById('btn-ping-private-auth0');
+  var pingPrivateCustom = document.getElementById('btn-ping-private-custom');
 
   var callPrivateMessage = document.getElementById('call-private-message');
   var pingMessage = document.getElementById('ping-message');
@@ -40,8 +41,12 @@ window.addEventListener('load', function() {
     callAPI('/public', false);
   });
 
-  pingPrivate.addEventListener('click', function() {
+  pingPrivateAuth0.addEventListener('click', function() {
     callAPI('/private/auth0', true);
+  });
+  
+  pingPrivateCustom.addEventListener('click', function() {
+    callAPI('/private/custom', true, true);
   });
 
   loginBtn.addEventListener('click', login);
@@ -67,7 +72,26 @@ window.addEventListener('load', function() {
   });
 
   function login() {
+    customLogin()
     webAuth.authorize();
+  }
+
+  function customLogin () {
+    var url = apiUrl + '/token';
+    console.log({url})
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    
+    xhr.onload = function() {
+      if (xhr.status == 200) {
+        // update message
+        const tokenResp = JSON.stringify(JSON.parse(xhr.responseText), null, 4);
+        localStorage.setItem('custom_token', tokenResp);
+      } else {
+        alert('Request failed: ' + xhr.statusText);
+      }
+    };
+    xhr.send();
   }
 
   function setSession(authResult) {
@@ -104,7 +128,7 @@ window.addEventListener('load', function() {
       logoutBtn.style.display = 'inline-block';
       profileViewBtn.style.display = 'inline-block';
       pingViewBtn.style.display = 'inline-block';
-      pingPrivate.style.display = 'inline-block';
+      pingPrivateAuth0.style.display = 'inline-block';
       callPrivateMessage.style.display = 'none';
       loginStatus.innerHTML = 'You are logged in! You can now send authenticated requests to your server.';
     } else {
@@ -115,7 +139,7 @@ window.addEventListener('load', function() {
       profileView.style.display = 'none';
       pingView.style.display = 'none';
       pingViewBtn.style.display = 'none';
-      pingPrivate.style.display = 'none';
+      pingPrivateAuth0.style.display = 'none';
       callPrivateMessage.style.display = 'block';
       loginStatus.innerHTML = 'You are not logged in! Please log in to continue.';
     }
@@ -198,14 +222,20 @@ window.addEventListener('load', function() {
     }
   }
 
-  function callAPI(endpoint, secured) {
+  function callAPI(endpoint, secured, custom) {
     var url = apiUrl + endpoint;
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url);
     if (secured) {
+      var access_token = localStorage.getItem('access_token')
+      if(custom) {
+        const tokenResp = JSON.parse(localStorage.getItem('custom_token')) || {} 
+        console.log({custom_token: localStorage.getItem('custom_token'), access_token});
+        access_token = tokenResp.access_token
+      }
       xhr.setRequestHeader(
         'Authorization',
-        'Bearer ' + localStorage.getItem('access_token')
+        'Bearer ' + access_token
       );
     }
     xhr.onload = function() {
