@@ -4,6 +4,18 @@
   "cache_ttl": "300s",
   "host": [ "http://fake_api:8080" ],
   "extra_config": {
+    "github_com/devopsfaith/krakend-httpsecure": {
+      "ssl_proxy_headers": {
+        "X-Forwarded-Proto": "https"
+      },
+      "ssl_redirect": true,
+      "ssl_port": "443",
+      "ssl_certificate": "~/Desktop/projects/local-cert/localhost.pem",
+      "ssl_private_key": "~/Desktop/projects/local-cert/localhost-key.pem",
+      "sts_seconds": 300,
+      "sts_include_subdomains": true
+    },
+
     "github_com/devopsfaith/krakend-metrics": {
       "collection_time": "30s",
       "listen_address":":8090"
